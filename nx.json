@@ -29,6 +29,9 @@
     "pos-e2e": {
       "tags": [],
       "implicitDependencies": ["pos"]
+    },
+    "api": {
+      "tags": []
     }
   }
 }

@@ -6,6 +6,7 @@ import {
   EntityState,
   PayloadAction,
 } from '@reduxjs/toolkit';
+import { create } from 'domain';
 
 export const MENU_FEATURE_KEY = 'menu';
 
@@ -49,9 +50,30 @@ export const fetchMenu = createAsyncThunk(
      * For example, `return myApi.getMenus()`;
      * Right now we just return an empty array.
      */
-    return Promise.resolve([]);
+    const result = await fetch('/api/menu')
+      .then(_ => _.json());
+
+    return result;
+    //  return Promise.resolve([]);
   }
 );
+
+export const addMenu = createAsyncThunk(
+  'menu/addMenuItem',
+  async (menuItem: MenuEntity) => {
+    const result = await fetch(
+      '/api/menu', {
+        method: 'POST',
+        body: JSON.stringify(menuItem),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(_ => _.json());
+
+    return result;
+  }
+)
 
 export const initialMenuState: MenuState = menuAdapter.getInitialState({
   loadingStatus: 'not loaded',
@@ -68,6 +90,9 @@ export const menuSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(addMenu.fulfilled, (state: MenuState, action: PayloadAction<MenuEntity>) => {
+        menuAdapter.addOne(state, action.payload);
+      })
       .addCase(fetchMenu.pending, (state: MenuState) => {
         state.loadingStatus = 'loading';
       })
