@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchMenu,
   addMenu,
+  removeMenu,
   selectAllMenu,
 } from '../../app/repository/menu.slice';
 import './Menu.css';
@@ -56,7 +57,10 @@ export const Menu = (props: MenuProps) => {
 
       <ul>
         {items.map((item) => (
-          <li key={item.id}>{item.description}</li>
+          <li key={item.id}>
+            <button onClick={() => dispatch( removeMenu(item) ) } > - </button>
+            {item.description}
+          </li>
         ))}
       </ul>
     </div>

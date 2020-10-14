@@ -8,7 +8,7 @@ import * as express from 'express';
 const app = express();
 app.use(express.json());
 
-const items = [
+let items = [
   { id: 101, description: 'Beer glass' },
   { id: 102, description: 'Small Pizza' },
   { id: 103, description: 'Big Pizza' },
@@ -26,7 +26,12 @@ app.get('/api/menu', (req, res) => {
 app.post('/api/menu', (req, res) => {
   items.push(req.body);
   res.send(req.body);
-})
+});
+
+app.delete('/api/menu', (req, res) => {
+  items = items.filter(item => item.id !== req.body.id);
+  res.send(req.body);
+});
 
 const port = process.env.port || 3333;
 const server = app.listen(port, () => {

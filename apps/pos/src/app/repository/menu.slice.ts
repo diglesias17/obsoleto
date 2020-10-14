@@ -45,25 +45,36 @@ export const menuAdapter = createEntityAdapter<MenuEntity>();
 export const fetchMenu = createAsyncThunk(
   'menu/fetchStatus',
   async (_, thunkAPI) => {
-    /**
-     * Replace this with your custom fetch call.
-     * For example, `return myApi.getMenus()`;
-     * Right now we just return an empty array.
-     */
     const result = await fetch('/api/menu')
       .then(_ => _.json());
 
     return result;
-    //  return Promise.resolve([]);
   }
 );
 
 export const addMenu = createAsyncThunk(
-  'menu/addMenuItem',
+  'menu/add',
   async (menuItem: MenuEntity) => {
     const result = await fetch(
       '/api/menu', {
         method: 'POST',
+        body: JSON.stringify(menuItem),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(_ => _.json());
+
+    return result;
+  }
+)
+
+export const removeMenu = createAsyncThunk(
+  'menu/remove',
+  async (menuItem: MenuEntity) => {
+    const result = await fetch(
+      '/api/menu', {
+        method: 'DELETE',
         body: JSON.stringify(menuItem),
         headers: {
           'Content-Type': 'application/json'
@@ -90,6 +101,9 @@ export const menuSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(removeMenu.fulfilled, (state: MenuState, action: PayloadAction<MenuEntity>) => {
+        menuAdapter.removeOne(state, action.payload.id);
+      })
       .addCase(addMenu.fulfilled, (state: MenuState, action: PayloadAction<MenuEntity>) => {
         menuAdapter.addOne(state, action.payload);
       })
