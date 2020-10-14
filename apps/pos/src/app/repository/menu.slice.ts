@@ -45,17 +45,15 @@ export const menuAdapter = createEntityAdapter<MenuEntity>();
 export const fetchMenu = createAsyncThunk(
   'menu/fetchStatus',
   async (_, thunkAPI) => {
-    const result = await fetch('/api/menu')
+    return await fetch('/api/menu')
       .then(_ => _.json());
-
-    return result;
   }
 );
 
 export const addMenu = createAsyncThunk(
   'menu/add',
   async (menuItem: MenuEntity) => {
-    const result = await fetch(
+    return await fetch(
       '/api/menu', {
         method: 'POST',
         body: JSON.stringify(menuItem),
@@ -64,15 +62,13 @@ export const addMenu = createAsyncThunk(
         }
       })
       .then(_ => _.json());
-
-    return result;
   }
 )
 
 export const removeMenu = createAsyncThunk(
   'menu/remove',
   async (menuItem: MenuEntity) => {
-    const result = await fetch(
+    return await fetch(
       '/api/menu', {
         method: 'DELETE',
         body: JSON.stringify(menuItem),
@@ -81,8 +77,6 @@ export const removeMenu = createAsyncThunk(
         }
       })
       .then(_ => _.json());
-
-    return result;
   }
 )
 
